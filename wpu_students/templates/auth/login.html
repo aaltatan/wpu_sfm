@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/all.min.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}" />
+    <title>Login</title>
+  </head>
+  <body>
+    <div class="wrapper">
+      <div class="wrapper__login">
+        <form method="POST">
+          <h4 class="text-center text-white my-3">Login to your account</h4>
+          {% include "./includes/Flash.html" %}
+          <div class="form-floating my-3">
+            <input type="text" class="form-control" name="username" id="username" placeholder="." />
+            <label for="username" class="text-capitalize">username</label>
+          </div>
+          <div class="form-floating mb-3">
+            <input
+              type="password"
+              class="form-control"
+              name="password"
+              id="password"
+              placeholder="."
+            />
+            <label for="password" class="text-capitalize">password</label>
+          </div>
+          <input type="submit" value="Login" class="btn btn-primary w-100 btn-lg" />
+        </form>
+      </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/all.min.js') }}"></script>
+  </body>
+</html>

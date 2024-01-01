@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+<!--  -->
+{% import "./macros.html" as macros %}
+<!--  -->
+{% block title %}Services{% endblock %}
+<!--  -->
+{% block body %}
+<!--  -->
+{{ macros.header(head=self.title()) }}
+<!--  -->
+{% include "includes/Flash.html" %}
+<!--  -->
+{% set headers = [ ['#', false], ['name', 'name'], ['price', 'price'], ['options', false] ] %}
+<!--  -->
+{% call macros.table(length=services|length, headers=headers) %}
+<tbody>
+  {% for service in services|sort(attribute=request.args.get('sortby','name'),reverse= True if
+  request.args.get('reverse') == 'true' else False ) %}
+  <tr class="align-middle">
+    <td>{{ loop.index }}</td>
+    <td>{{ service.name }}</td>
+    <td>{{ service.price|currency }}</td>
+    <td>
+      <div class="d-flex justify-content-center align-items-center gap-1">
+        <button
+          type="button"
+          class="btn btn-primary btn-sm editable-modal-btn"
+          title="Edit {{ service.name }}"
+          data-bs-toggle="modal"
+          data-bs-target="#edit-modal"
+          data-data='{ "id": {{ service.id }}, "modalTitle": "{{ service.name }}", "values": [ "{{ service.name }}", "{{ service.price }}" ] }'
+        >
+          <i class="fa-solid fa-pencil"></i>
+        </button>
+        {% if session['current_user']['role'] == 'admin' %}
+        <a
+          href="{{ url_for('services.delete_service', id=service.id) }}"
+          class="btn btn-danger btn-sm confirm"
+          title="Delete {{ service.name }}"
+          data-msg="Are you sure, you wanna DELETE {{ service.name }} ?"
+        >
+          <i class="fa-solid fa-trash"></i>
+        </a>
+        {% endif %}
+      </div>
+    </td>
+  </tr>
+  {% endfor %}
+</tbody>
+{% endcall %}
+<!-- modal add btn -->
+{{ macros.add_corner_btn(title="Add new service", target='add-modal') }}
+
+<!-- addModal  -->
+{% call macros.modal(title='Add Service', action=url_for('services.add_service'), id='add-modal') %}
+<div class="form-floating mb-3">
+  <input type="text" name="name" id="name" placeholder="." class="form-control" />
+  <label for="name">Name</label>
+</div>
+<div class="form-floating mb-3">
+  <input type="number" name="price" id="price" placeholder="." class="form-control" />
+  <label for="price">Price</label>
+</div>
+{% endcall %}
+<!-- /addModal  -->
+
+<!-- editModal  -->
+{% call macros.modal(title='Edit Service', action=url_for('services.edit_service', id=1),
+id='edit-modal', btn_class='success', editable=true) %}
+<div class="form-floating mb-3">
+  <input type="text" name="name" id="name" placeholder="." class="form-control" />
+  <label for="name">Name</label>
+</div>
+<div class="form-floating mb-3">
+  <input type="number" name="price" id="price" placeholder="." class="form-control" />
+  <label for="price">Price</label>
+</div>
+{% endcall %}
+<!-- /editModal  -->
+
+{% endblock %}
+<!--  -->
+{% block script %}
+<script src="{{ url_for('static', filename='js/confirm.js') }}"></script>
+<script src="{{ url_for('static', filename='js/modals.js') }}"></script>
+{% endblock %}

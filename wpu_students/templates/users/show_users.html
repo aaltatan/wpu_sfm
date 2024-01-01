@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+<!--  -->
+{% import "./macros.html" as macros %}
+<!--  -->
+{% block title %}Users{% endblock %}
+<!--  -->
+{% block body %}
+<!--  -->
+{{ macros.header(head=self.title()) }}
+<!--  -->
+{% include "includes/Flash.html" %}
+<!--  -->
+{% set table_headers = [ ['#',false], ["Username",'username'], ["Fullname",'fullname'], ["Created
+at", 'created_at'], ["Activation", 'is_activated'], ["Role", 'role'], ["Options",false] ] %}
+<!--  -->
+{% call macros.table(headers=table_headers, length=users|length) %}
+<tbody>
+  {% for user in users|sort(attribute=request.args.get('sortby','username'),reverse= True if
+  request.args.get('reverse') == 'true' else False ) %}
+  <tr class="align-middle">
+    <td>{{ loop.index }}</td>
+    <td>{{ user.username }}</td>
+    <td>{{ user.fullname }}</td>
+    <td>{{ user.created_at.strftime('%Y-%m-%d') }}</td>
+    <td>{{ user.is_activated }}</td>
+    <td>{{ user.role }}</td>
+    <td>
+      <div class="d-flex justify-content-center align-items-center gap-1">
+        <a
+          href="{{ url_for('users.edit_user', id=user.id) }}"
+          class="btn btn-primary btn-sm"
+          title="Edit {{ user.username }}"
+        >
+          <i class="fa-solid fa-pencil"></i>
+        </a>
+        <a
+          href="{{ url_for('users.reset_user', id=user.id) }}"
+          class="btn btn-primary btn-sm confirm"
+          title="Reset Password {{ user.username }}"
+          data-msg="Are you sure, you wanna RESET {{ user.username }}'s PASSWORD ?"
+        >
+          <i class="fa-solid fa-gear"></i>
+        </a>
+        <a
+          href="{{ url_for('users.delete_user', id=user.id) }}"
+          class="btn btn-danger btn-sm confirm"
+          title="Delete {{ user.username }}"
+          data-msg="Are you sure, you wanna DELETE {{ user.username }} ?"
+        >
+          <i class="fa-solid fa-trash"></i>
+        </a>
+        {% if user.is_activated %}
+        <a
+          href="{{ url_for('users.deactivate_user', id=user.id) }}"
+          class="btn btn-danger btn-sm confirm"
+          data-msg="Are you sure, you wanna DEACTIVATE {{ user.username }} ?"
+          title="Deactivate {{ user.username }}"
+        >
+          <i class="fa-solid fa-close"></i>
+        </a>
+        {% else %}
+        <a
+          href="{{ url_for('users.activate_user', id=user.id) }}"
+          class="btn btn-success btn-sm confirm"
+          data-msg="Are you sure, you wanna ACTIVATE {{ user.username }} ?"
+          title="Activate {{ user.username }}"
+        >
+          <i class="fa-solid fa-check"></i>
+        </a>
+        {% endif %}
+      </div>
+    </td>
+  </tr>
+  {% endfor %}
+</tbody>
+{% endcall %}
+<!--  -->
+{{ macros.add_corner_btn(title="Add new user",href=url_for('users.add_user')) }}
+<!--  -->
+{% endblock %}
+<!--  -->
+{% block script %}
+<script src="{{ url_for('static', filename='js/confirm.js') }}"></script>
+{% endblock %}

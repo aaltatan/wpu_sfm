@@ -1,0 +1,23 @@
+{% import "macros.html" as macros %}
+
+<aside class="bg-body z-2 closed" id="aside">
+  <button id="aside-close-btn" class="btn d-block d-sm-none position-absolute end-0 top-0 m-2">
+    <i class="fa-solid fa-close"></i>
+  </button>
+  <div class="accordion accordion-flush" id="accordionFlushExample">
+    {% set admin_links = [ ['Users', url_for('users.show_users'), 'fa-solid fa-user'] ] %}
+    <!--  -->
+    {% set settings_links = [ ['Faculties', url_for('faculties.show_faculties'), 'fa-solid
+    fa-building'], ['Services', url_for('services.show_services'), 'fa-solid fa-money-bill'] ] %}
+    <!--  -->
+    {% set transactions_links = [ ['Receipts', url_for('receipts.show_receipts'), 'fa-solid
+    fa-money-bill'] ] %}
+    <!--  -->
+    {{ macros.accordion_item(header='Admin', target='users', body=admin_links, admin=true) }}
+    <!--  -->
+    {{ macros.accordion_item(header='Transaction', target='transactions', body=transactions_links)
+    }}
+    <!--  -->
+    {{ macros.accordion_item(header='Settings', target='settings', body=settings_links) }}
+  </div>
+</aside>

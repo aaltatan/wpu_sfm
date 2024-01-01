@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+<!--  -->
+{% import "./macros.html" as macros %}
+<!--  -->
+{% block title %}Faculties{% endblock %}
+<!--  -->
+{% block body %}
+<!--  -->
+{{ macros.header(head=self.title()) }}
+<!--  -->
+{% include "includes/Flash.html" %}
+<!--  -->
+{% set headers = [ ['#', false], ['title', 'title'], ['options', false] ] %}
+<!--  -->
+{% call macros.table(length=faculties|length, headers=headers) %}
+<tbody>
+  {% for faculty in faculties|sort(attribute=request.args.get('sortby','title'),reverse= True if
+  request.args.get('reverse') == 'true' else False ) %}
+  <tr class="align-middle">
+    <td>{{ loop.index }}</td>
+    <td>{{ faculty.title }}</td>
+    <td>
+      <div class="d-flex justify-content-center align-items-center gap-1">
+        <button
+          type="button"
+          class="btn btn-primary btn-sm editable-modal-btn"
+          title="Edit {{ faculty.title }}"
+          data-bs-toggle="modal"
+          data-bs-target="#edit-modal"
+          data-data='{ "id": {{ faculty.id }}, "modalTitle": "{{ faculty.title }}", "values": [ "{{ faculty.title }}" ] }'
+        >
+          <i class="fa-solid fa-pencil"></i>
+        </button>
+        {% if session['current_user']['role'] == 'admin' %}
+        <a
+          href="{{ url_for('faculties.delete_faculty', id=faculty.id) }}"
+          class="btn btn-danger btn-sm confirm"
+          title="Delete {{ faculty.title }}"
+          data-msg="Are you sure, you wanna DELETE {{ faculty.title }} ?"
+        >
+          <i class="fa-solid fa-trash"></i>
+        </a>
+        {% endif %}
+      </div>
+    </td>
+  </tr>
+  {% endfor %}
+</tbody>
+{% endcall %}
+<!-- modal add btn -->
+{{ macros.add_corner_btn(title="Add new faculty", target='add-modal') }}
+
+<!-- addModal  -->
+{% call macros.modal(title='Add Faculty', action=url_for('faculties.add_faculty'), id='add-modal')
+%}
+<div class="form-floating mb-3">
+  <input type="text" name="title" id="title" placeholder="." class="form-control" />
+  <label for="title">Title</label>
+</div>
+{% endcall %}
+<!-- /addModal  -->
+
+<!-- editModal  -->
+{% call macros.modal(title='Edit Faculty', action=url_for('faculties.edit_faculty', id=1),
+id='edit-modal', btn_class='success', editable=true) %}
+<div class="form-floating mb-3">
+  <input type="text" name="title" id="title" placeholder="." class="form-control" />
+  <label for="title">Title</label>
+</div>
+{% endcall %}
+<!-- /editModal  -->
+
+{% endblock %}
+<!--  -->
+{% block script %}
+<script src="{{ url_for('static', filename='js/confirm.js') }}"></script>
+<script src="{{ url_for('static', filename='js/modals.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+<!--  -->
+{% import "./macros.html" as macros %}
+<!--  -->
+{% block title %}Receipts{% endblock %}
+<!--  -->
+{% block body %}
+<!--  -->
+{% include "includes/Flash.html" %}
+<!--  -->
+<h1 class="mb-2 letter-space-n3">{{ self.title() }}</h1>
+<div class="table-responsive" style="height: 70vh; font-size: 14px">
+  <table class="table table-borderless table-hover table-striped text-nowrap text-center">
+    <thead class="position-sticky top-0 start-0">
+      <tr class="text-center">
+        <td><input type="checkbox" name="" id="" /></td>
+        <th colspan="col">#</th>
+        <th colspan="col">Date</th>
+        <th colspan="col">Id</th>
+        <th colspan="col">Name</th>
+        <th colspan="col">Faculty</th>
+        <th colspan="col">Total</th>
+        <th colspan="col">Status</th>
+        <th colspan="col">Options</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in selected_batch %}
+      <tr class="align-middle">
+        <td><input type="checkbox" name="closed" id="" /></td>
+        <td>{{ loop.index }}</td>
+        <td>{{ row['date'].split(' ')[0] }}</td>
+        <td>{{ row['client_id'] }}</td>
+        <td>{{ row['client'] }}</td>
+        <td>{{ row['title'] }}</td>
+        <td>{{ row['total_price']|currency }}</td>
+        <td>{{ "Closed" if row['is_closed'] else 'Not Closed' }}</td>
+        <td>
+          <div class="d-flex justify-content-center align-items-center gap-1">
+            <a href="#" class="btn btn-primary btn-sm">
+              <i class="fa-solid fa-info-circle"></i>
+            </a>
+            <a href="#" class="btn btn-primary btn-sm">
+              <i class="fa-solid fa-print"></i>
+            </a>
+            <a href="#" class="btn btn-danger btn-sm">
+              <i class="fa-solid fa-trash"></i>
+            </a>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+<!--  -->
+{{ macros.pagination(length=batches|length, arg='page') }}
+<!--  -->
+{{ macros.add_corner_btn(title="Add new receipt",href=url_for('receipts.add_receipt')) }}
+<!--  -->
+{% endblock %}
+<!--  -->
+{% block script %}
+<script src="{{ url_for('static', filename='js/confirm.js') }}"></script>
+{% endblock %}

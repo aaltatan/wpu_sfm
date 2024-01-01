@@ -1,0 +1,46 @@
+{% set classes = 'shadow-sm' if request.cookies.get('theme') == 'light' else 'bg-dark-subtle' %}
+<header class="position-sticky top-0 start-0 bg-body z-3 {{ classes }}">
+  <nav class="navbar">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="{{ url_for('dashboard.index') }}">WPU</a>
+      <button class="btn ms-auto me-1 d-block d-sm-none" id="aside-open-btn">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+      <div class="btn-group">
+        <button
+          type="button"
+          class="btn btn-primary dropdown-toggle"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          {{ session['current_user']['username'] }}
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end p-0 overflow-hidden">
+          <li>
+            <h4 class="p-4 pb-3">{{ session['current_user']['fullname']|title }}</h4>
+          </li>
+          <li class="dropdown-divider"></li>
+          <li>
+            <a class="dropdown-item" href="{{ url_for('dashboard.set_theme') }}">
+              <div class="d-flex gap-2 align-items-center">
+                <i
+                  class="fa-solid fa-{{ 'sun' if request.cookies.get('theme','dark') == 'dark' else 'moon' }}"
+                >
+                </i>
+                <span>Mode</span>
+              </div>
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item" href="{{ url_for('auth.logout') }}">
+              <div class="d-flex gap-2 align-items-center">
+                <i class="fa-solid fa-arrow-alt-circle-left"></i>
+                <span>Logout</span>
+              </div>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+</header>

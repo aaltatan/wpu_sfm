@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/all.min.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}" />
+    {% block links %}{% endblock %}
+    <title>{% block title %}{% endblock %}</title>
+  </head>
+  <body data-bs-theme="{{ request.cookies.get('theme', 'dark') }}">
+    {% include "./includes/Navbar.html" %}
+    <div id="main">
+      {% include "./includes/Aside.html" %}
+      <main class="p-3">{% block body %} {% endblock %}</main>
+    </div>
+    {% block script %} {% endblock %}
+    <script src="{{ url_for('static', filename='js/base.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/all.min.js') }}"></script>
+  </body>
+</html>
